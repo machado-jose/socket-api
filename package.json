@@ -1,0 +1,21 @@
+{
+  "name": "socket-chartgpt",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "http": "^0.0.1-security",
+    "redis": "^4.6.3",
+    "socket.io": "^4.5.4"
+  },
+  "devDependencies": {
+    "jest": "^29.4.1",
+    "redis-mock": "^0.56.3",
+    "socket.io-client": "^4.5.4",
+    "supertest": "^6.3.3"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
