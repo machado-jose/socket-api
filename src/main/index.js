@@ -4,7 +4,7 @@ const env = require('./config/env')
 const app = require('./config/app')
 const server = require('./config/server')(app)
 const io = require('./socket/io')(server)
-const { joinRoom, addMessage } = require("./socket/events")(io)
+const { joinRoom, addMessage, addChatBotAnswer, joinChatBotRoom } = require("./socket/events")(io)
 
 const onConnections = (socket) => {
   console.log('A user connected');
@@ -13,6 +13,8 @@ const onConnections = (socket) => {
   });
   socket.on("join room", joinRoom);
   socket.on("chat message", addMessage);
+  socket.on("join chat bot room", joinChatBotRoom);
+  socket.on("chat bot message", addChatBotAnswer);
 }
 
 RedisHelper.connect(env.redisPort)

@@ -1,9 +1,19 @@
 const redis = require("redis");
 
 module.exports = {
-  async connect (port) {
+  async connect (port, enviroment = 'development') {
     this.port = port
-    this.client = redis.createClient(this.port)
+    if(enviroment == 'development'){
+      this.client = redis.createClient({
+        port: this.port,
+        db: 0
+      })
+    }else if(enviroment == 'test'){
+      this.client = redis.createClient({
+        port: this.port,
+        db: 1
+      })
+    }
     await this.client.PING().then(
       async () => {}, 
       async () => {
@@ -18,18 +28,21 @@ module.exports = {
     this.client = null
   },
 
-  async addMessage (room, message) {
+  async addMessage (tag, message) {
     if (!this.client || !this.client.ping()) {
       await this.client.connect()
     }
-    console.log(`messages:${room}`)
-    const savedMessage = await this.client.rPush(`messages:${room}`, message);
-    return savedMessage
+    await this.client.rPush(tag, message);
   },
 
-  async getRoomMessages(room) {
-    const messages = await this.client.lRange(`messages:${room}`, 0, -1)
+  async getRoomMessages(tag) {
+    const messages = await this.client.lRange(tag, 0, -1)
     return messages
+  },
+
+  async getRoomLastMessage(tag) {
+    const message = await this.client.lIndex(tag, -1)
+    return message
   }
 }
 
